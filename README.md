@@ -1,4 +1,4 @@
-# Cockpit addon - Import Collection Via Api
+# Cockpit CMS Addon - Import Collection Via Api
 
 Cockpit addon that can import collections data via API. Only accept "json" and "csv" file type.
 
