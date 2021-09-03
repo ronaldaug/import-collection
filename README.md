@@ -2,7 +2,7 @@
 
 Cockpit addon that can import collections data via API. Only accept "json" and "csv" file type.
 
-### Disclamier 
+### Disclaimer 
 > Most of the code are taken from Cockpit core code [here `import.php`](https://github.com/agentejo/cockpit/blob/b0a2350b099d686b81e9c1b48fffef8845b85939/modules/Collections/Controller/Import.php#L28). 
 
 ### This is NOT an official addon of Cockpit CMS.
