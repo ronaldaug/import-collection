@@ -11,8 +11,7 @@ Cockpit addon that can import collections data via API. Only accept "json" and "
 
 ## Installation
 
-- Add `import-collection` folder inside "addons" folder
-- Make sure to rename the folder name as `import-collection`
+- Add this repo ( `import-collection` ) folder inside "addons" folder
 
 
 --------
