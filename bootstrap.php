@@ -1,12 +1,12 @@
 <?php
 
 /**
- * CSV to JSON
+ * CSV to Array
  *
  * @param  $file
  * @return array
  */
-function csv_to_json($data)
+function csv_to_array($data)
 {
     $csv = array_map('str_getcsv', explode("\n", $data));
     array_walk($csv, function (&$row) use ($csv) {
@@ -38,7 +38,7 @@ if (COCKPIT_API_REQUEST) {
 
 
             if ($file['type'] === 'text/csv') {
-                $entries = csv_to_json($data);
+                $entries = csv_to_array($data);
             } else {
                 $entries = json_decode($data);
             }
