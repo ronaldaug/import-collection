@@ -28,7 +28,7 @@ Cockpit addon that can import collections data via API. Only accept "json" and "
 | parameter  | type      | description      | 
 | ---------- | --------- | ---------------- |
 | entries    | file      | csv or json file |
-| collection | text      | collection name, this must be the same with the collection name inside Cockpit dashboard |
+| collection | string    | collection name, this must be the same with the collection name inside Cockpit dashboard |
 
 --------
 
