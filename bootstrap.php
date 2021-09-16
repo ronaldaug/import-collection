@@ -19,7 +19,6 @@ function csv_to_array($data)
 if (COCKPIT_API_REQUEST) {
     $app->on('cockpit.rest.init', function ($routes) use ($app) {
         $routes['import'] = function () use ($app) {
-            \session_write_close();
 
             $file = $_FILES['entries'];
             $accept_type = ['text/csv', 'application/json'];
