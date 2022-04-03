@@ -46,9 +46,11 @@ if (COCKPIT_API_REQUEST) {
                 return $this->stop(['error' => 'Collection not found'], 412);
             }
            
-            if (!$this->module('collections')->hasaccess($collection, 'entries_create')) {
-                return $this->stop(['error' => 'Unauthorized'], 401);
-            }
+            // /* Instead of global Token, protect "/api/import" route with account Token */
+            
+            // if (!$this->module('collections')->hasaccess($collection, 'entries_create')) {
+            //    return $this->stop(['error' => 'Unauthorized'], 401);
+            // }
 
             $_collection = $this->module('collections')->collection($collection);
             $cid  = $_collection['_id'];
