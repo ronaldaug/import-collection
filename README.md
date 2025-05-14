@@ -1,44 +1,35 @@
-# Cockpit CMS Addon - Import Collection Via Api
+This Cockpit CMS addon allows you to import data into your collections via an API, supporting JSON and CSV file formats.
 
-Cockpit addon that can import collections data via API. Only accept "json" and "csv" file type.
+> If you're looking for Cockpit V1 - you can checkout to [this commit](https://github.com/ronaldaug/import-collection/tree/ba7fcc72f99bd0adb2dfa0a6b06b538da75c7e0c)
 
-### Disclaimer 
-> Most of the code are taken from Cockpit core code [here `import.php`](https://github.com/agentejo/cockpit/blob/b0a2350b099d686b81e9c1b48fffef8845b85939/modules/Collections/Controller/Import.php#L28). 
+**Important Notes:**
 
-### This is NOT an official addon of Cockpit CMS.
-### And not able to import "relational" field type.
-
---------
+* This is **NOT** an official Cockpit CMS addon.
+* Before importing with this addon, back up your `storage` folder.
+* It cannot import relational field types.
+* Much of the code is adapted from the official Cockpit core [here.](https://github.com/agentejo/cockpit/blob/b0a2350b099d686b81e9c1b48fffef8845b85939/modules/Collections/Controller/Import.php#L28)
 
 ## Installation
 
-- Add this repo ( `import-collection` ) folder inside "addons" folder
+1.  Place `import-v2` folder into your Cockpit "addons" directory.
+2.  Go to `/system/info` in your Cockpit backend, clear the cache, and refresh the page.
 
-- Navigate to `/system/info` , clear cache and refresh the page.
+## API Usage
 
---------
+* **Method:** `POST`
+* **Endpoint:** `/api/import`
 
-### API
+## Parameters
 
-- Method - `post`
-- Route - `/api/import`
+| Parameter   | Type   | Description                                                                        |
+| :---------- | :----- | :--------------------------------------------------------------------------------- |
+| `entries`   | File   | The JSON or CSV file containing the data to import.                                |
+| `collection`| String | The name of the target collection (must match the name in your Cockpit dashboard). |
+| `user_id`   | String | The ID of the user to whom the imported entries will be assigned.                  |
+| `api_key`   | String | Your Cockpit user API key (e.g., `USR-****`).                                      |
 
---------
+## Import Steps
 
-### Parameters
-
-| parameter  | type      | description      | 
-| ---------- | --------- | ---------------- |
-| entries    | file      | csv or json file |
-| collection | string    | collection name, this must be the same with the collection name inside Cockpit dashboard |
-| user_id | string    | The imported entries will be assigned to this user ID. |
-| api_key | string    | USR-**** |
-
---------
-
-### Step to import
-
-- Copy `import.html` to root folder.
-- Navigate to `https://yourdomain.com/import.html`
-- Fill all the field and import
-
+1.  Copy the `import.html` file to the root directory of your Cockpit installation.
+2.  Open `https://yourdomain.com/import.html` in your web browser.
+3.  Complete the form fields and submit to import your data.
