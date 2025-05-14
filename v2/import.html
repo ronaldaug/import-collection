@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cockpit - Data Import</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-hover-color: #0056b3;
+            --secondary-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-radius: 8px;
+            --input-padding: 0.75rem 1rem;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Align to top for scrollability if content is long */
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            color: var(--dark-gray);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: var(--input-padding);
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            font-size: 1rem;
+            color: var(--dark-gray);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        /* Custom File Input */
+        .custom-file-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-file-input input[type="file"] {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--input-padding);
+            background-color: var(--medium-gray);
+            color: var(--dark-gray);
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .file-input-label:hover {
+            background-color: #d8dcdf;
+        }
+
+        .file-input-icon {
+            margin-right: 8px;
+        }
+
+        .file-name-display {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            /* Allows it to take available space */
+            padding: 0.5rem 0;
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button[type="submit"]:hover:not(:disabled) {
+            background-color: var(--primary-hover-color);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        button[type="submit"]:disabled {
+            background-color: var(--secondary-color);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Loader animation */
+        .button-loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            -webkit-animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        /* Message Area */
+        .message-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 0.95rem;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .message-area.success {
+            background-color: #e6ffed;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+
+        .message-area.error {
+            background-color: #ffebee;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .custom-file-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .file-input-label {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .file-name-display {
+                margin-top: 0.5rem;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Import Your Data - Cockpit V2</h2>
+        <p class="subtitle" style="color:red;">Make sure you backup your <span style="background:#ffeefe;padding:.3rem;">storage</span> folder first!.</p>
+        <p class="subtitle">Place this folder under cockpit root project.</p>
+
+        <form id="importForm">
+            <div class="form-group">
+                <label for="fileInput">Import File (.csv or .json)</label>
+                <div class="custom-file-input">
+                    <input type="file" id="fileInput" name="entries" accept=".csv, .json, .txt, .xlsx" required>
+                    <label for="fileInput" class="file-input-label">
+                        <span class="file-input-icon">📁</span>
+                        <span class="file-input-text">Choose a file...</span>
+                    </label>
+                    <span id="fileName" class="file-name-display">No file selected</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="modelName">Model Name</label>
+                <input type="text" id="modelName" name="collection" placeholder="e.g., product, menu" required>
+            </div>
+
+            <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="text" id="userId" name="user_id" placeholder="Enter your user ID" required>
+                <p style="color:#999"><small>The imported entries will be assigned to this user ID. To get the user ID, navigate to <span style="background:#ffeefe;padding:.3rem;">/system/users</span>, select the specific user, and check the URL bar.</small></p>
+            </div>
+
+            <div class="form-group">
+                <label for="publishStatus">Publish Status</label>
+                <select id="publishStatus" name="publish">
+                    <option value="2" selected>Keep as Draft</option>
+                    <option value="1">Publish All Entries</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="apiKey">Your API Key</label>
+                <input type="text" id="apiKey" name="api_key" placeholder="Enter your API key" required>
+            </div>
+
+            <button type="submit" id="submitButton">
+                <span class="button-text">Upload Data</span>
+                <span class="button-loader" style="display: none;"></span>
+            </button>
+        </form>
+        <div id="messageArea" class="message-area"></div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const importForm = document.querySelector('#importForm');
+            const submitButton = document.querySelector('#submitButton');
+            const buttonText = submitButton.querySelector('.button-text');
+            const buttonLoader = submitButton.querySelector('.button-loader');
+            const messageArea = document.querySelector('#messageArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileName');
+
+            // Update file name display
+            fileInput.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                    fileNameDisplay.style.color = 'var(--dark-gray)';
+                } else {
+                    fileNameDisplay.textContent = 'No file selected';
+                    fileNameDisplay.style.color = 'var(--secondary-color)';
+                }
+            });
+
+            importForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                hideMessage(); // Clear previous messages
+
+                // Basic client-side validation (optional, but good practice)
+                const file = fileInput.files[0];
+                const modelName = document.getElementById('modelName').value.trim();
+                const userId = document.getElementById('userId').value.trim();
+                const apiKey = document.getElementById('apiKey').value.trim();
+
+                if (!file) {
+                    showMessage('Please select a file to import.', 'error');
+                    return;
+                }
+                if (!modelName) {
+                    showMessage('Model Name is required.', 'error');
+                    document.getElementById('modelName').focus();
+                    return;
+                }
+                if (!userId) {
+                    showMessage('User ID is required.', 'error');
+                    document.getElementById('userId').focus();
+                    return;
+                }
+                if (!apiKey) {
+                    showMessage('API Key is required.', 'error');
+                    document.getElementById('apiKey').focus();
+                    return;
+                }
+
+                // Show loading state
+                buttonText.textContent = 'Uploading...';
+                buttonLoader.style.display = 'inline-block';
+                submitButton.disabled = true;
+
+                let formData = new FormData(importForm);
+                const currentApiKey = formData.get('api_key'); // Get API key for the URL
+
+                try {
+                    const response = await fetch(`/api/import?api_key=${encodeURIComponent(currentApiKey)}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        console.log('Success:', result);
+                        showMessage(`${result.message || ''}`, 'success');
+                        importForm.reset(); // Optionally reset the form
+                        fileNameDisplay.textContent = 'No file selected'; // Reset file name display
+                        fileNameDisplay.style.color = 'var(--secondary-color)';
+                    } else {
+                        console.error('Error:', result);
+                        showMessage(`Import failed: ${result.error || response.statusText || 'Unknown error'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    showMessage(`An unexpected error occurred: ${error.message}`, 'error');
+                } finally {
+                    // Reset button state
+                    buttonText.textContent = 'Upload Data';
+                    buttonLoader.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            });
+
+            function showMessage(message, type = 'info') { // type can be 'success', 'error', or 'info'
+                messageArea.textContent = message;
+                messageArea.className = `message-area ${type}`; // Sets class like 'message-area success'
+                messageArea.style.display = 'block';
+            }
+
+            function hideMessage() {
+                messageArea.textContent = '';
+                messageArea.style.display = 'none';
+                messageArea.className = 'message-area'; // Reset classes
+            }
+        });
+
+    </script>
+</body>
+
+</html>
