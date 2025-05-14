@@ -33,3 +33,7 @@ This Cockpit CMS addon allows you to import data into your collections via an AP
 | `collection`| String | The name of the target collection (must match the name in your Cockpit dashboard). |
 | `user_id`   | String | The ID of the user to whom the imported entries will be assigned.                  |
 | `api_key`   | String | Your Cockpit user API key (e.g., `USR-****`).                                      |
+
+----
+
+<img src="screenshot.png" width="80%">
